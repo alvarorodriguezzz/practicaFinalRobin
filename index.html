@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KinoDron - Tienda de Drones</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="main.js" defer></script>
+  <link rel="stylesheet" href="popover.css">
+  <link rel="stylesheet" href="scrollbar.css">
+</head>
+
+<body class="bg-gray-100">
+
+  <!-- Header -->
+  <header class="bg-gray-100 shadow">
+
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <a href="index.html">
+        <img src="images/logo.png" alt="Logo" class="h-20 w-auto">
+      </a>
+        <span class="text-2xl font-bold text-gray-700">KinoDron</span>
+      </div>
+      <div class="flex items-center space-x-4">
+        <!-- Botón búsqueda -->
+        <button class="relative group dialog-search">
+          <img src="./iconos/search.svg" alt="Buscar" class="h-8 w-8 text-gray-600 hover:text-blue-500">
+        </button>
+
+        <!--Botón carrito de compras -->
+        <a href="carrito.html" class="relative group" popovertarget="menuCarrito" style="anchor-name: --anchor3;">
+          <img src="./iconos/shopping-cart.svg" alt="Carrito de compras"
+            class="h-8 w-8 text-gray-600 hover:text-blue-500">
+        </a>
+        <div id="menuCarrito" popover>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Buscador -->
+  <custom-search class="relative">
+    <dialog class="bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full">
+      <header class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-semibold text-gray-800">Buscar Productos</h2>
+        <button class="close-btn text-gray-500 hover:text-gray-700">✕</button>
+      </header>
+      <input type="text" id="site-search" placeholder="Buscar por nombre del producto..."
+        class="w-full border rounded-lg p-2 mb-4" />
+      <ul id="search-results" class="space-y-4">
+        <!-- Resultados de búsqueda -->
+      </ul>
+      <template>
+        <li class="flex space-x-4">
+          <img src="" alt="" class="item-image h-16 w-16 object-cover rounded">
+          <div class="card flex-1">
+            <h3 class="item-title font-semibold text-lg">
+              <a href="#" class="hover:text-blue-600"></a>
+            </h3>
+            <p class="item-description text-sm text-gray-600"></p>
+            <relative-time class="text-xs text-gray-500"></relative-time>
+          </div>
+        </li>
+      </template>
+    </dialog>
+  </custom-search>
+
+  <!-- Hero Section -->
+  <div class="hero relative bg-cover bg-center text-white py-16"
+    style="background-image: url('images/imagenHero.jpeg');">
+    <div class="absolute inset-0 bg-black bg-opacity-20 backdrop-blur-sm"></div>
+    <div class="relative container mx-auto text-center">
+      <h1 class="text-5xl font-bold mb-4">Explora los Mejores Drones</h1>
+      <p class="text-lg mb-6">Encuentra tecnología de punta y descubre el drone perfecto para tus aventuras.</p>
+      <a href="#product-grid" class="bg-white text-blue-500 px-6 py-3 rounded-lg shadow hover:bg-gray-100 transition">
+        Ver Catálogo
+      </a>
+    </div>
+  </div>
+
+  <!-- Grid de los artículos -->
+  <div class="container mx-auto px-20 py-8">
+    <div class="flex justify-between items-center mb-8">
+      <h2 class="invisible">qwdwqdqwdd</h2><!--es solo para que categotias se centre-->
+      <h1 class="text-3xl font-bold">Catálogo de Drones</h1>
+
+      <!-- Botón de Categorías -->
+      <button class="popo" popovertarget="popoverCategorias" style="anchor-name: --anchor;">
+        Categorías
+      </button>
+      <div id="popoverCategorias" popover>
+        <button popovertarget="colorPopover" style="anchor-name: --anchor2;">Color</button>
+        <div id="colorPopover" popover>
+          <a href="#">Gray</a>
+          <a href="#">Black</a>
+          <a href="#">White</a>
+          <a href="#">Orange</a>
+        </div>
+
+        <button popovertarget="camaraPopover" style="anchor-name: --anchor2;">Camera</button>
+        <div id="camaraPopover" popover>
+          <a href="#">48MP</a>
+          <a href="#">20MP</a>
+          <a href="#">16MP</a>
+          <a href="#">12MP</a>
+        </div>
+
+        <button popovertarget="bateriaPopover" style="anchor-name: --anchor2;">Battery</button>
+        <div id="bateriaPopover" popover>
+          <a href="#">40 minutes</a>
+          <a href="#">30 minutes</a>
+          <a href="#">25 minutes</a>
+          <a href="#">20 minutes</a>
+        </div>
+
+        <button popovertarget="rangoPopover" style="anchor-name: --anchor2;">Range</button>
+        <div id="rangoPopover" popover>
+          <a href="#">10 km</a>
+          <a href="#">9 km</a>
+          <a href="#">7 km</a>
+          <a href="#">3.5 km</a>
+        </div>
+      </div>
+
+
+    </div>
+    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Aquí se renderizan los productos -->
+    </div>
+  </div>
+
+  <!-- Template para los productos -->
+  <template id="product-template">
+    <a href="" class="block bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow product-link">
+      <img src="" alt="" class="h-48 w-full object-cover rounded-t-lg">
+      <div class="mt-4">
+        <h2 class="text-xl font-semibold product-name"></h2>
+        <p class="text-gray-600 mt-2 product-description"></p>
+        <p class="text-lg font-bold mt-4 product-price"></p>
+      </div>
+    </a>
+  </template>
+
+
+  <footer class="bg-gray-100 py-4 text-center">
+    <p class="text-gray-700">© 2024 KinoDron. Todos los derechos reservados.</p>
+  </footer>
+</body>
+
+</html>

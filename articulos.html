@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle del Producto</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="main.js" defer></script>
+</head>
+<body class="bg-gray-100">
+  <!-- Header -->
+  <header class="bg-gray-100 shadow">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <a href="index.html">
+        <div class="flex items-center space-x-3">
+          <img src="images/logo.png" alt="Logo" class="h-20 w-auto">
+          <span class="text-2xl font-bold text-gray-700">KinoDron</span>
+        </div>
+      </a>
+      <div>
+        <a href="carrito.html" class="relative group">
+          <img src="./iconos/shopping-cart.svg" alt="Carrito de compras" class="h-8 w-8 text-gray-600 hover:text-blue-500">
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenedor principal -->
+  <div class="flex items-center justify-center h-[calc(100vh-64px)] px-4">
+    <div class="grid md:grid-cols-2 gap-6">
+      <!-- Imagen del producto -->
+      <div class="relative flex items-center justify-center">
+        <img id="product-image" src="" alt="Imagen del Producto" class="w-2/3 h-auto object-cover rounded-lg shadow">
+      </div>
+
+      <!-- Detalles del producto -->
+      <div class="p-6 flex flex-col justify-center">
+        <h1 id="product-name" class="text-4xl font-bold mb-4 text-gray-800">Nombre del Producto</h1>
+        <hr class="border-gray-300 mb-4">
+
+        <p class="text-gray-600 mb-6 leading-relaxed">
+          <strong>Descripción:</strong>
+          <span id="product-description">Descripción detallada del producto.</span>
+        </p>
+        <hr class="border-gray-300 mb-4">
+
+        <!-- Calificación -->
+        <p class="text-gray-600 mb-4">
+          <strong>Calificación:</strong>
+          <span id="product-rating" class="text-yellow-500">4.7</span> / 5
+        </p>
+
+        <!-- Etiquetas -->
+        <div class="mb-4">
+          <strong>Etiquetas:</strong>
+          <ul id="product-tags" class="list-disc list-inside text-gray-600"></ul>
+        </div>
+
+        <!-- Características -->
+        <div class="mb-4">
+          <strong>Características:</strong>
+          <ul id="product-features" class="list-disc list-inside text-gray-600"></ul>
+        </div>
+
+        <!-- Precio -->
+        <p id="product-price" class="text-2xl font-semibold text-blue-600 mb-6">Precio: 799 €</p>
+
+        <!-- Botón de compra -->
+        <div>
+          <button class="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700 transition">
+            Añadir al Carrito
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-gray-300 py-4 text-center">
+    <p>© 2024 KinoDron. Todos los derechos reservados.</p>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      // Obtener el id del producto de la URL
+      const params = new URLSearchParams(window.location.search);
+      const productId = params.get('id');  // URL ejemplo: producto.html?id=123
+      
+      if (!productId) {
+        console.error("No se ha encontrado el id del producto en la URL.");
+        return;
+      }
+
+      // Llamar a la API para obtener detalles del producto
+      try {
+        const response = await fetch(`https://products-foniuhqsba-uc.a.run.app/Drones/${productId}`);
+        const productData = await response.json();
+
+        if (response.ok) {
+          // Asegurarse de que el precio es un número válido
+          let productPrice = parseFloat(productData.price.replace("€", "").trim());
+          if (isNaN(productPrice)) {
+            console.error("El precio no es un valor numérico válido.");
+            return;
+          }
+
+          // Mostrar detalles del producto en la página
+          document.getElementById("product-name").textContent = productData.name;
+          document.getElementById("product-description").textContent = productData.description;
+          document.getElementById("product-price").textContent = `Precio: ${productPrice.toFixed(2)} €`;
+          document.getElementById("product-image").src = productData.image;
+
+          // Agregar etiquetas y características
+          const productTagsList = document.getElementById("product-tags");
+          productData.tags?.forEach(tag => {
+            const li = document.createElement("li");
+            li.textContent = tag;
+            productTagsList.appendChild(li);
+          });
+
+          const productFeaturesList = document.getElementById("product-features");
+          productData.features?.forEach(feature => {
+            const li = document.createElement("li");
+            li.textContent = feature;
+            productFeaturesList.appendChild(li);
+          });
+
+          // Funcionalidad del botón "Añadir al Carrito"
+          const addToCartButton = document.querySelector("button.bg-blue-600");
+          addToCartButton.addEventListener("click", () => addToCart(productData, productPrice));
+
+        } else {
+          console.error("Error al obtener los datos del producto:", productData);
+        }
+      } catch (error) {
+        console.error("Error al hacer la petición a la API:", error);
+      }
+    });
+
+    // Función para añadir el producto al carrito
+    const addToCart = (product, price) => {
+      const cartProduct = {
+        id: product.id,
+        name: product.name,
+        price: price,  // Usar el precio convertido a número
+        image: product.image,
+        quantity: 1  // Inicialmente, la cantidad es 1
+      };
+
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      // Verificar si el producto ya está en el carrito
+      const productIndex = cart.findIndex(p => p.id === product.id);
+      if (productIndex !== -1) {
+        cart[productIndex].quantity += 1;
+      } else {
+        cart.push(cartProduct);
+      }
+
+      // Guardar el carrito actualizado en localStorage
+      localStorage.setItem("cart", JSON.stringify(cart));
+
+      alert(`${product.name} ha sido añadido al carrito.`);
+      updateCartCount();
+    };
+
+    // Función para actualizar el contador del carrito
+    const updateCartCount = () => {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const cartCount = document.getElementById("cart-count");
+      if (cart.length > 0) {
+        cartCount.textContent = cart.length;
+        cartCount.classList.remove("hidden");
+      } else {
+        cartCount.classList.add("hidden");
+      }
+    };
+
+    // Actualizar contador cuando la página se carga
+    updateCartCount();
+  </script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrito de Compras</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-5">
+
+  <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-5">
+    <h1 class="text-2xl font-bold mb-5">Carrito de Compras</h1>
+
+    <div id="cart-items" class="space-y-4"></div>
+
+    <div id="empty-cart-message" class="text-center text-gray-500 hidden">
+      Tu carrito está vacío.
+    </div>
+
+    <div id="cart-total" class="mt-5 text-right text-xl font-semibold text-gray-800">
+      Total: 0 €
+    </div>
+
+    <button id="checkout-button" class="mt-5 w-full bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600">
+      Proceder al Pago
+    </button>
+  </div>
+
+  <script>
+    function getCartFromLocalStorage() {
+      return JSON.parse(localStorage.getItem("cart")) || [];
+    }
+
+    function saveCartToLocalStorage(cart) {
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+
+    function renderCart() {
+      const cartItemsContainer = document.getElementById("cart-items");
+      const emptyCartMessage = document.getElementById("empty-cart-message");
+      const cartTotalContainer = document.getElementById("cart-total");
+
+      const cart = getCartFromLocalStorage();
+      cartItemsContainer.innerHTML = "";
+
+      if (cart.length === 0) {
+        emptyCartMessage.classList.remove("hidden");
+      } else {
+        emptyCartMessage.classList.add("hidden");
+      }
+
+      let total = 0;
+      cart.forEach(product => {
+        const price = parseFloat(product.price) || 0;
+        const subtotal = price * product.quantity;
+        total += subtotal;
+
+        const productElement = `
+          <div class="flex items-center justify-between bg-gray-50 p-4 rounded">
+            <div class="flex items-center space-x-4">
+              <img src="${product.image}" alt="${product.name}" class="h-16 w-16 rounded">
+              <div>
+                <h2 class="text-lg font-semibold">${product.name}</h2>
+                <p class="text-sm text-gray-500">Cantidad: ${product.quantity}</p>
+                <p class="text-sm text-gray-500">Precio: ${price.toFixed(2)} €</p>
+              </div>
+            </div>
+            <div class="text-right font-semibold text-gray-700">
+              ${subtotal.toFixed(2)} €
+            </div>
+          </div>
+        `;
+        cartItemsContainer.insertAdjacentHTML("beforeend", productElement);
+      });
+
+      cartTotalContainer.textContent = `Total: ${total.toFixed(2)} €`;
+    }
+
+    renderCart();
+
+    document.getElementById("checkout-button").addEventListener("click", () => {
+      alert("Procediendo al pago...");
+    });
+
+    const addToCart = (product) => {
+      const cartProduct = {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        quantity: 1
+      };
+
+      let cart = getCartFromLocalStorage();
+
+      const productIndex = cart.findIndex(p => p.id === product.id);
+      if (productIndex !== -1) {
+        cart[productIndex].quantity += 1;
+      } else {
+        cart.push(cartProduct);
+      }
+
+      saveCartToLocalStorage(cart);
+      renderCart();
+    };
+  </script>
+
+</body>
+</html>
