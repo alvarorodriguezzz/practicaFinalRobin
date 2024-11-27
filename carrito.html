@@ -58,9 +58,9 @@
         const productElement = `
           <div class="flex items-center justify-between bg-gray-50 p-4 rounded">
             <div class="flex items-center space-x-4">
-              <img src="${product.image}" alt="${product.name}" class="h-16 w-16 rounded">
+              <img src="${product.image}" alt="${product.title}" class="h-16 w-16 rounded">
               <div>
-                <h2 class="text-lg font-semibold">${product.name}</h2>
+                <h2 class="text-lg font-semibold">${product.title}</h2>
                 <p class="text-sm text-gray-500">Cantidad: ${product.quantity}</p>
                 <p class="text-sm text-gray-500">Precio: ${price.toFixed(2)} €</p>
               </div>
@@ -79,13 +79,16 @@
     renderCart();
 
     document.getElementById("checkout-button").addEventListener("click", () => {
-      alert("Procediendo al pago...");
+      
     });
+
+
+    
 
     const addToCart = (product) => {
       const cartProduct = {
         id: product.id,
-        name: product.name,
+        name: product.title,
         price: product.price,
         image: product.image,
         quantity: 1

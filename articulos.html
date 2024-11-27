@@ -105,7 +105,7 @@
           }
 
           // Mostrar detalles del producto en la página
-          document.getElementById("product-name").textContent = productData.name;
+          document.getElementById("product-name").textContent = productData.title;
           document.getElementById("product-description").textContent = productData.description;
           document.getElementById("product-price").textContent = `Precio: ${productPrice.toFixed(2)} €`;
           document.getElementById("product-image").src = productData.image;
@@ -141,10 +141,10 @@
     const addToCart = (product, price) => {
       const cartProduct = {
         id: product.id,
-        name: product.name,
-        price: price,  // Usar el precio convertido a número
+        name: product.title,
+        price: price, 
         image: product.image,
-        quantity: 1  // Inicialmente, la cantidad es 1
+        quantity: 1  
       };
 
       let cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -160,7 +160,6 @@
       // Guardar el carrito actualizado en localStorage
       localStorage.setItem("cart", JSON.stringify(cart));
 
-      alert(`${product.name} ha sido añadido al carrito.`);
       updateCartCount();
     };
 

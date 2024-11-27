@@ -3,13 +3,11 @@ const apiUrl = 'https://products-foniuhqsba-uc.a.run.app/Drones';
 
 
 
-// boton ver catalogo hace un scroll mas lento
 document.addEventListener('DOMContentLoaded', () => {
   const productId = getProductId();
   if (productId) {
     fetchProductDetails(productId);
   }
-
 
   const catalogButton = document.querySelector("a[href='#product-grid']");
   if (catalogButton) {
@@ -171,7 +169,7 @@ function initializeCategoryFilters() {
 
 
 
-// Función para obtener el parámetro `id` de la URL
+// pillo la id de la url
 function getProductId() {
   const params = new URLSearchParams(window.location.search);
   return params.get('id');
